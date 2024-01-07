@@ -1,13 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Dec 9 13:06:59 2022
-@author: MITHIL
-"""
-
 import numpy as np
-import pickle 
+import pickle
 import streamlit as st
-import os  # Import the os module for working with file paths
+import os
+import matplotlib.pyplot as plt
 
 # Check and install scikit-learn
 try:
@@ -46,7 +41,7 @@ def main():
     Glucose = st.text_input('Glucose level')
     BloodPressure = st.text_input('Blood pressure value')
     SkinThickness = st.text_input('Skin thickness value')
-    Insulin = st.text_input('Insulin value')
+
     BMI = st.text_input('BMI value')
     DiabetesPedigreeFunction = st.text_input('Diabetes pedigree function value')
     Age = st.text_input('Age of the person')
@@ -56,9 +51,33 @@ def main():
     
     # Creating a button for result
     if st.button('Diabetes Test Result'):
-        diagnosis = diabetes_prediction([Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age])
+        diagnosis = diabetes_prediction([Pregnancies, Glucose, BloodPressure, SkinThickness, BMI, DiabetesPedigreeFunction, Age])
         
-    st.success(diagnosis)
+        # Display result
+        st.success(diagnosis)
+        
+        # Visualize input data as a bar chart
+        labels = ['Pregnancies', 'Glucose', 'Blood Pressure', 'Skin Thickness', 'BMI', 'Diabetes Pedigree Function', 'Age']
+        input_values = [float(Pregnancies), float(Glucose), float(BloodPressure), float(SkinThickness), float(BMI), float(DiabetesPedigreeFunction), float(Age)]
+        
+        # Plotting bar chart
+        fig_bar, ax_bar = plt.subplots(figsize=(10, 5))
+        ax_bar.bar(labels, input_values)
+        ax_bar.set_title('Input Data Bar Chart')
+        ax_bar.set_xlabel('Features')
+        ax_bar.set_ylabel('Values')
+        
+        # Plotting line chart
+        fig_line, ax_line = plt.subplots(figsize=(10, 5))
+        ax_line.plot(labels, input_values, marker='o', label='Input Data')
+        ax_line.set_title('Input Data Line Chart')
+        ax_line.set_xlabel('Features')
+        ax_line.set_ylabel('Values')
+        ax_line.legend()
+        
+        # Pass the figures to st.pyplot()
+        st.pyplot(fig_bar)
+        st.pyplot(fig_line)
 
 if __name__ == '__main__':
     main()
